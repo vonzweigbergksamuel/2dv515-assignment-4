@@ -133,4 +133,50 @@ export class NaiveBayes {
 		const exponent = Math.exp(-((x - mean) ** 2) / (2 * variance));
 		return (1 / (Math.sqrt(2 * Math.PI) * std)) * exponent;
 	}
+
+	accuracyScore(predictions: string[], y: string[]): number {
+		let correct = 0;
+
+		for (let i = 0; i < predictions.length; i++) {
+			if (predictions[i] === y[i]) {
+				correct++;
+			}
+		}
+
+		return correct / predictions.length;
+	}
+
+	confusionMatrix(predictions: string[], y: string[]): number[][] {
+		const labels = Array.from(new Set(y)).sort();
+		const labelToIndex = new Map<string, number>();
+		labels.forEach((label, i) => {
+			labelToIndex.set(label, i);
+		});
+
+		const matrix: number[][] = Array(labels.length)
+			.fill(0)
+			.map(() => Array(labels.length).fill(0));
+
+		for (let i = 0; i < predictions.length; i++) {
+			const trueLabel = y[i];
+			const predLabel = predictions[i];
+
+			if (trueLabel && predLabel) {
+				const trueIndex = labelToIndex.get(trueLabel);
+				const predIndex = labelToIndex.get(predLabel);
+
+				if (trueIndex !== undefined && predIndex !== undefined) {
+					const trueRow = matrix[trueIndex];
+					if (trueRow) {
+						const currentValue = trueRow[predIndex];
+						if (currentValue !== undefined) {
+							trueRow[predIndex] = currentValue + 1;
+						}
+					}
+				}
+			}
+		}
+
+		return matrix;
+	}
 }
