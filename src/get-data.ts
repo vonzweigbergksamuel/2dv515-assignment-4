@@ -7,9 +7,7 @@ interface DataResult {
 }
 
 export async function getData(fileName: string): Promise<DataResult> {
-	const X: number[][] = [];
-	const y: string[] = [];
-
+	const combined: { features: number[]; label: string }[] = [];
 	const dataPath = resolve(__dirname, "../data", fileName);
 
 	return new Promise((resolvePromise, reject) => {
@@ -26,15 +24,9 @@ export async function getData(fileName: string): Promise<DataResult> {
 					.map((key) => parseFloat(row[key] || "0"));
 				const label = row[lastKey] || "";
 
-				X.push(features);
-				y.push(label);
+				combined.push({ features, label });
 			})
 			.on("end", () => {
-				const combined = X.map((features, i) => ({
-					features,
-					label: y[i] || "",
-				}));
-
 				for (let i = combined.length - 1; i > 0; i--) {
 					const j = Math.floor(Math.random() * (i + 1));
 					const temp = combined[i];
