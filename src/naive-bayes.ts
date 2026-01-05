@@ -8,6 +8,7 @@ interface ClassModel {
 export class NaiveBayes {
 	private model: ClassModel[] = [];
 
+	// Trains the model on the data
 	fit(X: number[][], y: string[]): void {
 		if (X.length === 0 || !X[0]) return;
 
@@ -48,6 +49,7 @@ export class NaiveBayes {
 		}
 	}
 
+	// Calculates the variance of the features for a given class
 	private calculateVariance(
 		className: string,
 		means: number[],
@@ -82,6 +84,7 @@ export class NaiveBayes {
 		return varianceSums.map((sum) => sum / classCount);
 	}
 
+	// Predicts the class of a given sample
 	predict(X: number[][]): string[] {
 		const predictions: string[] = [];
 
@@ -98,6 +101,7 @@ export class NaiveBayes {
 					const meanValue = classModel.mean[i];
 
 					if (variance === undefined || variance === 0) {
+						// If the variance is undefined or 0, set it to a very small value to avoid division by zero
 						variance = 1e-9;
 					}
 
@@ -124,6 +128,7 @@ export class NaiveBayes {
 		return predictions;
 	}
 
+	// Calculates the probability of a given sample belonging to a given class
 	private calculateProbability(
 		x: number,
 		mean: number,
@@ -134,6 +139,7 @@ export class NaiveBayes {
 		return (1 / (Math.sqrt(2 * Math.PI) * std)) * exponent;
 	}
 
+	// Calculates the accuracy of the model
 	accuracyScore(predictions: string[], y: string[]): number {
 		let correct = 0;
 
@@ -146,6 +152,7 @@ export class NaiveBayes {
 		return correct / predictions.length;
 	}
 
+	// Calculates the confusion matrix of the model
 	confusionMatrix(predictions: string[], y: string[]): number[][] {
 		const labels = Array.from(new Set(y)).sort();
 		const labelToIndex = new Map<string, number>();
