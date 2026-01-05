@@ -81,4 +81,56 @@ export class NaiveBayes {
 
 		return varianceSums.map((sum) => sum / classCount);
 	}
+
+	predict(X: number[][]): string[] {
+		const predictions: string[] = [];
+
+		for (const sample of X) {
+			let bestClass: string | null = null;
+			let bestScore = -1;
+
+			for (const classModel of this.model) {
+				let score = classModel.prior;
+
+				for (let i = 0; i < sample.length; i++) {
+					let variance = classModel.variance[i];
+					const sampleValue = sample[i];
+					const meanValue = classModel.mean[i];
+
+					if (variance === undefined || variance === 0) {
+						variance = 1e-9;
+					}
+
+					if (sampleValue !== undefined && meanValue !== undefined) {
+						score *= this.calculateProbability(
+							sampleValue,
+							meanValue,
+							variance,
+						);
+					}
+				}
+
+				if (score > bestScore) {
+					bestScore = score;
+					bestClass = classModel.name;
+				}
+			}
+
+			if (bestClass !== null) {
+				predictions.push(bestClass);
+			}
+		}
+
+		return predictions;
+	}
+
+	private calculateProbability(
+		x: number,
+		mean: number,
+		variance: number,
+	): number {
+		const std = Math.sqrt(variance);
+		const exponent = Math.exp(-((x - mean) ** 2) / (2 * variance));
+		return (1 / (Math.sqrt(2 * Math.PI) * std)) * exponent;
+	}
 }
