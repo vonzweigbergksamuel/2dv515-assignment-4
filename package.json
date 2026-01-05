@@ -1,25 +1,12 @@
 {
-  "name": "2dv515-assignment-2",
+  "name": "2dv515-assignment-4",
+  "module": "index.ts",
+  "type": "module",
   "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "biome format --write .",
-    "check-types": "turbo run check-types"
-  },
   "devDependencies": {
-    "@biomejs/biome": "2.3.6",
-    "turbo": "^2.6.3"
+    "@types/bun": "latest"
   },
-  "packageManager": "pnpm@10.25.0",
-  "engines": {
-    "node": ">=18"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "@tailwindcss/oxide"
-    ]
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }
